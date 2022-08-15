@@ -1,4 +1,4 @@
-import { Center, Container} from "@chakra-ui/react";
+import { Center, Container, Switch, Box, Text} from "@chakra-ui/react";
 import { Button} from '@chakra-ui/react'
 import { Link } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -9,6 +9,55 @@ const axios = require('axios');
 export default function MLWidget({data, setNotification}: {data: any, setNotification: any}) {
 
     const [input, setInput] = useState<string>('0');
+    const [mode, setMode] = useState<string>("");
+    const [disableToggle, setDisableToggle] = useState<boolean>(true);
+    const [switchIsChecked, setSwitchIsChecked] = useState<boolean>(false);
+
+    const toggleMode = () => {
+        setTimeout(() => setDisableToggle(true), 100);
+        axios({
+            method: 'post',
+            url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/toggle_mode`,
+            withCredentials: false
+        }).then((res: any) => {
+            if(mode == "machine_learning"){
+                setMode("weather_api")
+                setNotification({
+                    message: `Mode has been changed to weather_api`,
+                    type: "notif"
+                })
+            }else{
+                setMode("machine_learning")
+                setNotification({
+                    message: `Mode has been changed to machine_learning`,
+                    type: "notif"
+                })
+            }
+            setTimeout(() => setNotification({message: null, type: "notif"}), 1000);
+        })
+        setTimeout(() => setDisableToggle(false), 2000);
+    }
+
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/get_mode`,
+            withCredentials: false
+        }).then((res: any) => {
+            setMode(res.data);
+            setDisableToggle(false)
+        })
+    }, [])
+
+
+    useEffect(() => {
+        if(mode == "machine_learning"){
+            setSwitchIsChecked(true);
+        }else{
+            setSwitchIsChecked(false);
+        }
+    }, 
+    [mode])
 
     const updateTrainingFreq = () => {
         //validate string to number, else raise error
@@ -54,7 +103,7 @@ export default function MLWidget({data, setNotification}: {data: any, setNotific
 
     return (
         <Container right="0px" borderRadius="20%" marginTop="10px" >
-            <div style={{backgroundColor: "#e7e7e7", paddingTop:"10px"}}>
+            <Box bg='gray.300' p={4} borderRadius='md'>
                 <Center>
                     <img src={`${process.env.NEXT_PUBLIC_REST_ENDPOINT}/ml_img`}
                      alt="Decision Tree" width="150px" height="200px" 
@@ -69,9 +118,18 @@ export default function MLWidget({data, setNotification}: {data: any, setNotific
                 <br/>
 
                 <div style={{paddingLeft: "15px"}}>
-                    <p>Last Model Training Time :{data?.last_update_time}</p>
-                    <p>N Samples Used: {data?.n_samples_used} </p>
-                    <p>Training Frequency: <br/>
+                    <p>
+                        Machine Learning: &nbsp;&nbsp;
+                        <Switch 
+                        size="md"
+                        defaultChecked={mode == "machine_learning"} 
+                        onChange={toggleMode} isDisabled={disableToggle}
+                        isChecked={switchIsChecked}
+                        />
+                    </p>
+                    <p>Last Model Training Time : <b>{data?.last_update_time}</b></p>
+                    <p>N Samples Used: <b>{data?.n_samples_used}</b> </p>
+                    <p>Training Frequency: &nbsp;
                         <input type="text" 
                         value={input} 
                         size={1}
@@ -87,13 +145,18 @@ export default function MLWidget({data, setNotification}: {data: any, setNotific
                 </div>
                 
             <br/>
-            </div>
+            </Box>
+            
+            {/*
             <h4 style={{
                 height: "40px",
                 backgroundColor: "lightgray",
                 fontWeight: 'bold',
                 fontSize: "18px"
-            }}>ML Widget</h4>
+            }}>ML Widget</h4> */}
+            <Box bg='gray.400' mt={-3} borderRadius="0 0 7px 7px" fontSize={18} px={2} >
+                <Text align='center' fontWeight={500}>ML Widget</Text>
+            </Box>
         </Container>
     )
 }

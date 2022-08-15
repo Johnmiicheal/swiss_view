@@ -1,66 +1,15 @@
 import { Container} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Switch } from '@chakra-ui/react'
+import { Text, Box } from '@chakra-ui/react'
 
 const axios = require('axios');
 
-export default function StatusWidget({data, setNotification}: {data: any, setNotification: any}){
-
-
-    const [mode, setMode] = useState<string>("");
-    const [disableToggle, setDisableToggle] = useState<boolean>(true);
-    const [switchIsChecked, setSwitchIsChecked] = useState<boolean>(false);
-
-    const toggleMode = () => {
-        setTimeout(() => setDisableToggle(true), 100);
-        axios({
-            method: 'post',
-            url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/toggle_mode`,
-            withCredentials: false
-        }).then((res: any) => {
-            if(mode == "machine_learning"){
-                setMode("weather_api")
-                setNotification({
-                    message: `Mode has been changed to weather_api`,
-                    type: "notif"
-                })
-            }else{
-                setMode("machine_learning")
-                setNotification({
-                    message: `Mode has been changed to machine_learning`,
-                    type: "notif"
-                })
-            }
-            setTimeout(() => setNotification({message: null, type: "notif"}), 1000);
-        })
-        setTimeout(() => setDisableToggle(false), 2000);
-    }
-
-    useEffect(() => {
-        axios({
-            method: 'get',
-            url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/get_mode`,
-            withCredentials: false
-        }).then((res: any) => {
-            setMode(res.data);
-            setDisableToggle(false)
-        })
-    }, [])
-
-
-    useEffect(() => {
-        if(mode == "machine_learning"){
-            setSwitchIsChecked(true);
-        }else{
-            setSwitchIsChecked(false);
-        }
-    }, 
-    [mode])
+export default function StatusWidget({data}: {data: any}){
 
     return (
         <Container marginTop="10px" marginBottom="4%">
 
-            <div style={{paddingBottom:"10px", paddingTop: "10px", paddingLeft:"15px",  backgroundColor: "#e7e7e7"}}>
+            <Box bg='gray.300' p={4} borderRadius='md'>
+            {/* <div style={{paddingBottom:"10px", paddingTop: "10px", paddingLeft:"15px",  backgroundColor: "#e7e7e7"}}> */}
             
                     {data?.station_status == "Online" ? 
                     <div style ={{
@@ -79,29 +28,16 @@ export default function StatusWidget({data, setNotification}: {data: any, setNot
                         display: "inline-block",
                     }}/> 
                      }
-                <p>Status: {data?.station_status}</p>
-                <p>Last Updated: {data?.last_update_time}</p>
-                <p>Uptime: {(data.uptime / 60).toFixed(2)} hours </p>
-                <p>Battery Percentage: {data?.battery_percentage}% </p>
-                <p>Update Frequency: {data?.update_frequency} </p>
+                <p>Status: <b>{data?.station_status} </b></p>
+                <p>Last Updated: <b>{data?.last_update_time}</b></p>
+                <p>Uptime: <b>{(data.uptime / 60).toFixed(2)} hours </b></p>
+                <p>Battery Percentage: <b>{data?.battery_percentage}% </b></p>
+                <p>Update Frequency: <b>{data?.update_frequency} </b></p>
 
-                <p>
-                    Machine Learning &nbsp;&nbsp;
-                    <Switch 
-                    size="md"
-                    defaultChecked={mode == "machine_learning"} 
-                    onChange={toggleMode} isDisabled={disableToggle}
-                    isChecked={switchIsChecked}
-                    />
-                    
-                </p>
-            </div>
-            <h4 style={{
-                height: "40px",
-                backgroundColor: "lightgray",
-                fontWeight: 'bold',
-                fontSize: "17px"
-            }}>Status Widget</h4>
+            </Box>
+            <Box bg='gray.400' mt={-3} borderRadius="0 0 7px 7px" fontSize={18} px={2} >
+                <Text align='center' fontWeight={500}>Status Widget</Text>
+            </Box>
         </Container>
     )
 }

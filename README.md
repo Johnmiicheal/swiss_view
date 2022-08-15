@@ -1,11 +1,19 @@
 <p align='center'>
-  <img src="https://github.com/Johnmiicheal/swiss_view/blob/main/public/swislogo.png" w='full' alt='swiss_logo' />
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/public/swislogo.png" w='full' alt='swiss_logo' />
  </p>
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 Check out the [SWISS Demo](https://swiss-view.netlify.app) 
 
+
+## Demo Shots
+
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/docs/images/2.png" w='full' alt='swiss_logo' />
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/docs/images/5.png" w='full' alt='swiss_logo' />
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/docs/images/3.png" w='full' alt='swiss_logo' />
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/docs/images/4.png" w='full' alt='swiss_logo' />
+  <img src="https://github.com/owolabioromidayo/swiss_view/blob/main/docs/images/1.png" w='full' alt='swiss_logo' />
 
 ## Getting Started
 

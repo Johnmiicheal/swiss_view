@@ -11,7 +11,7 @@ import NavLink from "./NavLink";
 const LinkItems = [
   { label: "Dashboard", icon: FiHome, href: "/" },
   { label: "Graphs", icon: IoBarChartOutline, href: "/graphs" },
-  { label: "Settings", icon: FiSettings, href: "/settings" },
+  // { label: "Settings", icon: FiSettings, href: "/settings" },
 ];
 
 export default function Sidebar({ onClose, page, setPage,  ...rest }) {

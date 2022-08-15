@@ -334,7 +334,7 @@ export default function DataView(){
         };
         
     return(
-        <Flex  direction="column"  ml={{ base: -5, md:-14}}>
+        <Flex  direction="column"  ml={{ base: -5, md:-5, lg: 10}}>
             <Box ml={{ base: -5, lg: -80}} w='300' bg='gray.200'>
                 <Menu  >
                     <MenuButton backgroundColor="lightgray" borderRadius="0px" 

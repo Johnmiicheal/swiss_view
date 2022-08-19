@@ -34,10 +34,19 @@ type notificationType = {
   type: "err" | "notif";
 };
 
+
+type GraphData = {
+        ext_temp : number[],
+        baro_pressure: number[],
+        wind_speed : number[],
+        humidity : number[],
+        gas_resistance: number[],
+        battery_percentage: number[],
+}
+
 const Home: NextPage = () => {
 
   const [welcome, setWelcome] = useState<boolean>(true);
-  const [showMap, setShowMap] = useState<boolean>(false);
   const [page, setPage] = useState<string>("/");
   const [gasResistance, setGasResistance] = useState<number>(0);
   const [precipitation, setPrecipitation] = useState<number>(0);
@@ -53,6 +62,23 @@ const Home: NextPage = () => {
     last_update_time: undefined,
     n_samples_used: undefined,
   });
+
+  const [graphData, setGraphData] = useState<GraphData>({
+      ext_temp : [],
+      baro_pressure: [],
+      wind_speed : [],
+      humidity : [],
+      gas_resistance: [],
+      battery_percentage: [],
+  });
+
+  const [labels, setLabels] = useState<Date[]>([]);
+
+  const [tickerData, setTickerData] = useState({
+    windSpeed: 0,
+    humidity: 0,
+    pressure: 0
+  })
 
   const [weatherData, setWeatherData] = useState({
     icon_image_url: "",
@@ -74,6 +100,34 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
+
+
+    axios({
+        method: 'get',
+        url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/sensor_data/get`,
+        withCredentials: false
+    }).then( (res:any) => {
+            let recv : GraphData = res.data;
+            let newTicker = { 
+              windSpeed: 0,
+              humidity: 0,
+              pressure: 0
+            }
+            if (recv.humidity.length >= 2){
+               newTicker.humidity = recv.humidity[recv.humidity.length-1] - recv.humidity[recv.humidity.length-2]
+            }
+            if (recv.wind_speed.length >= 2){
+              newTicker.windSpeed = recv.wind_speed[recv.wind_speed.length-1] - recv.wind_speed[recv.wind_speed.length-2]
+            }
+            if (recv.baro_pressure.length >= 2){
+              newTicker.pressure= recv.baro_pressure[recv.baro_pressure.length-1] - recv.baro_pressure[recv.baro_pressure.length-2]
+            }
+
+            setGraphData(recv);
+            setLabels(res.data.datetime.map(k => new Date(k)));
+            setTickerData(newTicker);
+
+        })
     axios({
       method: "get",
       url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/ml_info`,
@@ -101,9 +155,7 @@ const Home: NextPage = () => {
       setStatusData(res.data);
     });
 
-    // setTimeout(() => setWelcome(false), 1000)left ;
     setWelcome(false);
-    setTimeout(() => setShowMap(true), 6000);
   }, []);
 
   const time = new Date().toLocaleTimeString([], {
@@ -188,7 +240,7 @@ const Home: NextPage = () => {
               </Heading>
               
               <StatusWidget data={statusData}  />
-              <WeatherWidget data={weatherData} uv={uv} />
+              <WeatherWidget data={weatherData} uv={uv} tickerData={tickerData} />
               <MLWidget data={mlData} setNotification={setNotification} />
 
 
@@ -218,7 +270,7 @@ const Home: NextPage = () => {
             {page === "/graphs"? 
             <>
               <Flex ml={{md: 16, lg: 60}}>
-                <DataView />
+                <DataView data={graphData} labels={labels} />
               </Flex>
             </>
             : <></>}

@@ -2,7 +2,7 @@ import { Flex, Alert, AlertIcon, AlertTitle, Box, Heading, SimpleGrid, Image, Te
 import {InfoIcon} from '@chakra-ui/icons'
 import { useState, useEffect } from "react";
 
-export default function WeatherWidget({data, uv}: {data: any, uv:number}){
+export default function WeatherWidget({data, uv, tickerData}: {data: any, uv:number, tickerData:any}){
     // const imSize = useBreakpointValue({base: "200px", md:"200px", sm:"200px"})
     
     const breakPoints = [2,5,7,10]
@@ -76,8 +76,8 @@ export default function WeatherWidget({data, uv}: {data: any, uv:number}){
                         <StatLabel>Wind Speed</StatLabel>
                         <StatNumber>{data.wind_speed}km/h</StatNumber>
                         <StatHelpText>
-                          <StatArrow type="decrease" />
-                          1.9%
+                          <StatArrow type={tickerData.windSpeed> 0 ? "increase" : "decrease"} />
+                          {tickerData.windSpeed}%
                         </StatHelpText>
                         </Stat>   
                   </Flex>
@@ -105,8 +105,8 @@ export default function WeatherWidget({data, uv}: {data: any, uv:number}){
                         <StatLabel>Pressure</StatLabel>
                         <StatNumber>{data.baro_pressure}psi</StatNumber>
                         <StatHelpText>
-                          <StatArrow type="increase" />
-                          3.4%
+                          <StatArrow type={tickerData.pressure > 0 ? "increase" : "decrease"} />
+                          {tickerData.pressure}%
                         </StatHelpText>
                         </Stat>
                   </Flex>
@@ -158,8 +158,8 @@ export default function WeatherWidget({data, uv}: {data: any, uv:number}){
                         <StatLabel>Humidity</StatLabel>
                         <StatNumber>{data.humidity}%</StatNumber>
                         <StatHelpText>
-                          <StatArrow type="increase" />
-                          5.5%
+                          <StatArrow type={tickerData.humidity> 0 ? "increase" : "decrease"} />
+                          {tickerData.humidity}%
                         </StatHelpText>
                         </Stat>
                   </Flex>

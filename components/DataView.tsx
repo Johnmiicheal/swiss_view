@@ -204,18 +204,8 @@ function TableView({data, labels}: {data: GraphData, labels: Date[]}){
     )
 }
 
-export default function DataView(){
-    const [labels, setLabels] = useState<Date[]>([]);
+export default function DataView({data, labels}: {data:GraphData, labels:Date[]}){
     const [isTable, setIsTable] = useState<boolean>(false);
-    const [data, setData] = useState<GraphData>({
-        ext_temp : [],
-        baro_pressure: [],
-        wind_speed : [],
-        humidity : [],
-        gas_resistance: [],
-        battery_percentage: [],
-    });
-
     const [filteredData, setFilteredData] = useState<GraphData>({
         ext_temp : [],
         baro_pressure: [],
@@ -230,17 +220,8 @@ export default function DataView(){
 
 
     useEffect( () => {
-        axios({
-            method: 'get',
-            url: ` ${process.env.NEXT_PUBLIC_REST_ENDPOINT}/sensor_data/get`,
-            withCredentials: false
-        }).then( (res:any) => {
-                let recv : GraphData = res.data;
-                setData(recv);
-                setLabels(res.data.datetime.map(k => new Date(k)));
-                setTimeFilter("year");
-            })
-        }, [])
+        setTimeFilter("year");
+    }, [])
 
     useEffect(() => {
         if(timeFilter == "null"){

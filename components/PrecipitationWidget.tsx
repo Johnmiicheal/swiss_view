@@ -13,7 +13,7 @@ export default function PrecipitationWidget({data}: {data: number}){
                     style={{ margin: '0 auto' }}
                     width={180}
                     height={180}
-                    value={Math.floor((data*100 / (500*0.2974))*1000 )/1000}
+                    value={Math.floor((data*100 / (500*0.2794))*1000 )/1000}
                     percent="%"
                     textSize={1}
                     textOffsetX={0}
@@ -28,7 +28,7 @@ export default function PrecipitationWidget({data}: {data: number}){
  
                         return (
                             <tspan>
-                                <tspan className="value" style={valueStyle}>{data.toFixed(2)}</tspan>
+                                <tspan className="value" style={valueStyle}>{(data * 0.2794).toFixed(2)}</tspan>
                                 <tspan style={percentStyle}>&nbsp;mm/hr</tspan>
                             </tspan>
                         );

@@ -56,15 +56,19 @@ export default function GasResistanceWidget({gasResistance} : {gasResistance : n
                             display: "inline-block",
                             position: "relative"
                         }}> 
-                            <p style={{textAlign:"center", 
-                                color:TextDetails[textProps].color, 
-                                position:"absolute",
-                                 top:"38%", 
-                                 right:"29%", 
-                                 fontSize:20,
-                            }}>
-                                <b>{TextDetails[textProps].text}</b>
-                            </p>
+
+                        <Center>
+                                <p style={{textAlign:"center", 
+                                    color:TextDetails[textProps].color, 
+                                    position:"absolute",
+                                    top:"38%", 
+                                    // right:"29%", 
+                                    fontSize:20,
+                                }}>
+                                    <b>{TextDetails[textProps].text}</b>
+                                </p>
+
+                        </Center>
                         </div>
                     </Center>
                     <Center mt={3}>

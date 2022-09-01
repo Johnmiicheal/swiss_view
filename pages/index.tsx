@@ -75,9 +75,9 @@ const Home: NextPage = () => {
   const [labels, setLabels] = useState<Date[]>([]);
 
   const [tickerData, setTickerData] = useState({
-    windSpeed: 0,
-    humidity: 0,
-    pressure: 0
+    windSpeed: "0",
+    humidity: "0",
+    pressure: "0"
   })
 
   const [weatherData, setWeatherData] = useState({
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
     wind_speed: undefined,
     wind_direction: undefined,
     baro_pressure: undefined,
-    ext_temp: undefined,
+    ext_temp: 0,
     humidity: undefined,
     uv: undefined,
   });
@@ -109,18 +109,20 @@ const Home: NextPage = () => {
     }).then( (res:any) => {
             let recv : GraphData = res.data;
             let newTicker = { 
-              windSpeed: 0,
-              humidity: 0,
-              pressure: 0
+              windSpeed: "0",
+              humidity: "0",
+              pressure: "0"
             }
             if (recv.humidity.length >= 2){
-               newTicker.humidity = recv.humidity[recv.humidity.length-1] - recv.humidity[recv.humidity.length-2]
+               newTicker.humidity = ((recv.humidity[recv.humidity.length-1] - recv.humidity[recv.humidity.length-2]) /  recv.humidity[recv.humidity.length-2] ).toFixed(2);
             }
             if (recv.wind_speed.length >= 2){
-              newTicker.windSpeed = recv.wind_speed[recv.wind_speed.length-1] - recv.wind_speed[recv.wind_speed.length-2]
+              newTicker.windSpeed = ((recv.wind_speed[recv.wind_speed.length-1] - recv.wind_speed[recv.wind_speed.length-2])  /  recv.wind_speed[recv.wind_speed.length-2] ).toFixed(2);
+
             }
             if (recv.baro_pressure.length >= 2){
-              newTicker.pressure= recv.baro_pressure[recv.baro_pressure.length-1] - recv.baro_pressure[recv.baro_pressure.length-2]
+              newTicker.pressure= ((recv.baro_pressure[recv.baro_pressure.length-1] - recv.baro_pressure[recv.baro_pressure.length-2]) /  recv.baro_pressure[recv.baro_pressure.length-2] ).toFixed(2)
+
             }
 
             setGraphData(recv);
@@ -215,7 +217,7 @@ const Home: NextPage = () => {
                   />
                     <Heading color="#000A16" fontWeight={500}>
                       {" "}
-                      {weatherData?.ext_temp}º C{" "}
+                      {weatherData?.ext_temp.toFixed(1)}º C{" "}
                     </Heading>
                 </Flex>
                   <Flex mx={8} align="center">
@@ -328,7 +330,7 @@ const Home: NextPage = () => {
                   />
                     <Heading color="#000A16" fontWeight={500}>
                       {" "}
-                      {weatherData?.ext_temp}º C{" "}
+                      {weatherData?.ext_temp.toFixed(1)}º C{" "}
                     </Heading>
                 </Flex>
                   <Flex mx={8} align="center">
